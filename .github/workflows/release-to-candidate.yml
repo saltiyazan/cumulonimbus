@@ -24,5 +24,12 @@ jobs:
           issue-number: "123"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           screenshots-token: "random-string"
+      - name: Check if previous step failed
+        if: ${{ failure() && steps.screenshot_step.outcome == 'failure' }}
+        run: |
+          echo "Gathering screenshots failed. Entering debug mode..."
+          # You can add additional commands here to handle the failure as needed
+      
       - name: Setup upterm session
+        if: ${{ always() }} # This ensures that the upterm session is set up regardless of previous step success or failure
         uses: lhotari/action-upterm@v1
